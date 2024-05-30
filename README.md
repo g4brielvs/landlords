@@ -1,6 +1,10 @@
 # Leveraging NYC Open Data to Identify Potential Potential Housing Maintenance Code in New York City
 
-The New York Attorney General (NYAG) is actively combating various harmful landlord practices such as tenant harassment, deed theft, and bank fraud, which adversely impact tenants and homeowners. By leveraging open data publicly available through [NYC Open Data](https://opendata.cityofnewyork.us), this notebook uses data analysis tools to identify, describe, and visualize characteristics of landlords engaging in harmful behaviors.
+The New York Attorney General (NYAG) is actively combating various harmful landlord practices such as tenant harassment, deed theft, and bank fraud, which adversely impact tenants and homeowners. By leveraging open data publicly available through [NYC Open Data](https://opendata.cityofnewyork.us), this projects uses data analysis tools to identify, describe, and visualize characteristics of landlords engaging in harmful behaviors.
+
+The solution is implemented in a [Jupyter notebook](notebooks/landlords.ipynb) and presented as a [Jupyter Book](_build/html/index.html). To access and visualize the solution, please open [`_build/html/index.html`](_build/html/index.html).  
+
+**Alternatively, the solution is available as a [private repository](https://github.com/g4brielvs/landlords) and the web book is publicly available at https://g4brielvs.github.io/landlords.**
 
 ## Installation
 
@@ -53,3 +57,7 @@ To build the documentation locally, after (1) and (2) above, please follow these
   ```
 
 The generated documentation will be available in the `_build/html` directory. Open the `index.html` file in a web browser to view it.
+
+## License
+
+This projects is licensed under the [**GNU General Public License v3**](https://opensource.org/license/gpl-3-0) - see the [LICENSE](LICENSE) file for details.
