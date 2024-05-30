@@ -1,0 +1,17 @@
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - jupyterlab
+  - jupyterlab_code_formatter
+  - pip
+  - theme-darcula
+  - bokeh
+  - pandas
+  - polars
+  - pyarrow
+  - geopandas
+  - jupyter-book
+  - dask
+  - httpx
+  - plotly
