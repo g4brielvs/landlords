@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Leveraging NYC Open Data to Identify Potential Top 10 Violators in New York City</title>
+    <title>Leveraging NYC Open Data to Identify Potential Potential Housing Maintenance Code in New York City</title>
   
   
   
@@ -365,7 +365,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -376,11 +378,23 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Leveraging NYC Open Data to Identify Potential Top 10 Violators in New York City</h1>
+    <h1>Leveraging NYC Open Data to Identify Potential Potential Housing Maintenance Code in New York City</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#from-source">From Source</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-documentation-locally">Building Documentation Locally</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -390,8 +404,57 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="leveraging-nyc-open-data-to-identify-potential-top-10-violators-in-new-york-city">
-<h1>Leveraging NYC Open Data to Identify Potential Top 10 Violators in New York City<a class="headerlink" href="#leveraging-nyc-open-data-to-identify-potential-top-10-violators-in-new-york-city" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="leveraging-nyc-open-data-to-identify-potential-potential-housing-maintenance-code-in-new-york-city">
+<h1>Leveraging NYC Open Data to Identify Potential Potential Housing Maintenance Code in New York City<a class="headerlink" href="#leveraging-nyc-open-data-to-identify-potential-potential-housing-maintenance-code-in-new-york-city" title="Permalink to this heading">#</a></h1>
+<p>The New York Attorney General (NYAG) is actively combating various harmful landlord practices such as tenant harassment, deed theft, and bank fraud, which adversely impact tenants and homeowners. By leveraging open data publicly available through <a class="reference external" href="https://opendata.cityofnewyork.us">NYC Open Data</a>, this notebook uses data analysis tools to identify, describe, and visualize characteristics of landlords engaging in harmful behaviors.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
+<p><strong>landlords</strong> can installed using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<section id="from-source">
+<h3>From Source<a class="headerlink" href="#from-source" title="Permalink to this heading">#</a></h3>
+<ol class="arabic">
+<li><p>Clone or download this repository to your local machine. Then, navigate to the root directory of the repository:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/g4brielvs/landlords.git
+<span class="nb">cd</span><span class="w"> </span>landlords
+</pre></div>
+</div>
+</li>
+<li><p>Create a virtual environment (optional but recommended):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># On Windows, use `venv\Scripts\activate`</span>
+</pre></div>
+</div>
+</li>
+<li><p>Install the package with dependencies:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>.
+</pre></div>
+</div>
+<p>Install the package <strong>in editable</strong> mode with dependencies:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-e</span></code> flag stands for “editable,” meaning changes to the source code will immediately affect the installed package.</p>
+</li>
+</ol>
+</section>
+<section id="building-documentation-locally">
+<h3>Building Documentation Locally<a class="headerlink" href="#building-documentation-locally" title="Permalink to this heading">#</a></h3>
+<p>To build the documentation locally, after (1) and (2) above, please follow these steps:</p>
+<ul>
+<li><p>Install the package with documentation dependencies:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="w">  </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>docs<span class="o">]</span>
+</pre></div>
+</div>
+</li>
+<li><p>Build the documentation:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="w">  </span>jupyter-book<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </span>--config<span class="w"> </span>docs/_config.yml<span class="w"> </span>--toc<span class="w"> </span>docs/_toc.yml
+</pre></div>
+</div>
+</li>
+</ul>
+<p>The generated documentation will be available in the <code class="docutils literal notranslate"><span class="pre">_build/html</span></code> directory. Open the <code class="docutils literal notranslate"><span class="pre">index.html</span></code> file in a web browser to view it.</p>
+</section>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -430,6 +493,25 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#from-source">From Source</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-documentation-locally">Building Documentation Locally</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
