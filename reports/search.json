@@ -1,0 +1,86 @@
+[
+  {
+    "objectID": "brief.html#nyc-housing-maintenance-code",
+    "href": "brief.html#nyc-housing-maintenance-code",
+    "title": "NYC Landlord Compliance Sentinel",
+    "section": "NYC Housing Maintenance Code",
+    "text": "NYC Housing Maintenance Code\n\n\n\n\n\nImage description\n\n\n\nThe New York City Housing Maintenance Code (HMC) protects tenants’ rights, promotes public health, and ensures that all New Yorkers live in well-maintained homes. Understanding and complying with the HMC is essential for landlords, tenants, and housing advocates to uphold the quality of housing in the city."
+  },
+  {
+    "objectID": "brief.html#problem-statement",
+    "href": "brief.html#problem-statement",
+    "title": "NYC Landlord Compliance Sentinel",
+    "section": "Problem Statement",
+    "text": "Problem Statement\nThe NYAG actively works to combat harmful landlord practices, including tenant harassment, deed theft, bank fraud, and other violations impacting tenants and homeowners."
+  },
+  {
+    "objectID": "brief.html#data",
+    "href": "brief.html#data",
+    "title": "NYC Landlord Compliance Sentinel",
+    "section": "Data",
+    "text": "Data\n\n\n - HMC VIolations 1 - Multiple Dwelling Registrations - Purple\n\n\nHMC VIolations 2\n\n\n\n\n\n\n\n\nSome additional commentary of more peripheral interest.\nhttps://nycopendata.socrata.com/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5/about_datahttps://nycopendata.socrata.com/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5/about_data"
+  },
+  {
+    "objectID": "brief.html#methodology",
+    "href": "brief.html#methodology",
+    "title": "NYC Landlord Compliance Sentinel",
+    "section": "Methodology",
+    "text": "Methodology\nExploratory Data Analysis (EDA)\nFeature Engineering"
+  },
+  {
+    "objectID": "brief.html#exploring-violations",
+    "href": "brief.html#exploring-violations",
+    "title": "NYC Landlord Compliance Sentinel",
+    "section": "Exploring Violations",
+    "text": "Exploring Violations\n\n\n\n\n\n\n\n\n\nViolationID\nBuildingID\nRegistrationID\nBoroID\nBorough\nHouseNumber\nLowHouseNumber\nHighHouseNumber\nStreetName\nStreetCode\n...\nViolationStatus\nRentImpairing\nLatitude\nLongitude\nCommunityBoard\nCouncilDistrict\nCensusTract\nBIN\nBBL\nNTA\n\n\n\n\n0\n10034143\n629900\n400688\n4\nQUEENS\n77-54\n77-44\n77-54\nAUSTIN STREET\n28990\n...\nClose\nN\n40.714368\n-73.835218\n6\n29\n76901\n4079660\n4.033340e+09\nForest Hills\n\n\n1\n10034171\n629900\n400688\n4\nQUEENS\n77-54\n77-44\n77-54\nAUSTIN STREET\n28990\n...\nClose\nN\n40.714368\n-73.835218\n6\n29\n76901\n4079660\n4.033340e+09\nForest Hills\n\n\n2\n10797937\n94244\n203084\n2\nBRONX\n2136\n2136\n2136\nMAPES AVENUE\n49120\n...\nClose\nN\n40.847751\n-73.884561\n6\n15\n36501\n2013000\n2.031110e+09\nEast Tremont\n\n\n3\n10018078\n879456\n0\n5\nSTATEN ISLAND\n129\n129\n129\nSENECA STREET\n47450\n...\nClose\nN\n40.631619\n-74.117918\n1\n49\n125\n5147984\n5.002160e+09\nWest New Brighton-New Brighton-St. George\n\n\n4\n10018080\n879456\n0\n5\nSTATEN ISLAND\n129\n129\n129\nSENECA STREET\n47450\n...\nClose\nN\n40.631619\n-74.117918\n1\n49\n125\n5147984\n5.002160e+09\nWest New Brighton-New Brighton-St. George\n\n\n\n\n5 rows × 41 columns"
+  },
+  {
+    "objectID": "brief.html#chart",
+    "href": "brief.html#chart",
+    "title": "NYC Landlord Compliance Sentinel",
+    "section": "Chart",
+    "text": "Chart\n\n\n\n\n\npie title NETFLIX\n         \"Time spent looking for movie\" : 90\n         \"Time spent watching it\" : 10"
+  },
+  {
+    "objectID": "brief.html#chart-1",
+    "href": "brief.html#chart-1",
+    "title": "NYC Landlord Compliance Sentinel",
+    "section": "Chart",
+    "text": "Chart\n\n\n\n\n\ngantt\n    title A Gantt Diagram\n    dateFormat YYYY-MM-DD\n    section Section\n        A task          :a1, 2014-01-01, 30d\n        Another task    :after a1, 20d\n    section Another\n        Task in Another :2014-01-12, 12d\n        another task    :24d"
+  },
+  {
+    "objectID": "brief.html#results-and-findings",
+    "href": "brief.html#results-and-findings",
+    "title": "NYC Landlord Compliance Sentinel",
+    "section": "Results and Findings",
+    "text": "Results and Findings\n\n\n\n\n\nzenuml\n    title Annotators\n    @Actor Alice\n    @Database Bob\n    Alice-&gt;Bob: Hi Bob\n    Bob-&gt;Alice: Hi Alice"
+  },
+  {
+    "objectID": "brief.html#code-2",
+    "href": "brief.html#code-2",
+    "title": "NYC Landlord Compliance Sentinel",
+    "section": "Code 2",
+    "text": "Code 2\n\n\n\n\n\n\n\n\n\nViolationID\n\n\n\n\n0\n10034143\n\n\n1\n10034171\n\n\n2\n10797937\n\n\n3\n10018078\n\n\n4\n10018080\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nViolationID\n\n\n\n\n0\n10034143\n\n\n1\n10034171\n\n\n2\n10797937\n\n\n3\n10018078\n\n\n4\n10018080"
+  },
+  {
+    "objectID": "brief.html#recommendations",
+    "href": "brief.html#recommendations",
+    "title": "NYC Landlord Compliance Sentinel",
+    "section": "Recommendations",
+    "text": "Recommendations\nFuture Work\n\nIdentify areas for future research and improvement.\nMention potential data sources or methodologies that could enhance the analysis."
+  },
+  {
+    "objectID": "brief.html#conclusion",
+    "href": "brief.html#conclusion",
+    "title": "NYC Landlord Compliance Sentinel",
+    "section": "Conclusion",
+    "text": "Conclusion\nSummary\n\nIdentified top 10 potential HMC violators in NYC\n\n\n\nQ&A"
+  },
+  {
+    "objectID": "brief.html#thank-you",
+    "href": "brief.html#thank-you",
+    "title": "NYC Landlord Compliance Sentinel",
+    "section": "Thank you!",
+    "text": "Thank you!\n\nmail@g4brielvs.me\n\n\n\n\nNYC Landlord Compliance Sentinel"
+  }
+]
