@@ -1,11 +1,8 @@
-from bokeh.models import ColumnDataSource, FactorRange, NumeralTickFormatter
-from bokeh.plotting import figure, show, output_notebook
+from bokeh.models import ColumnDataSource, FactorRange, NumeralTickFormatter, HoverTool
+from bokeh.plotting import figure, show
 from bokeh.transform import factor_cmap
 
-
 from bokeh.palettes import Category20_20
-
-output_notebook()
 
 
 def plot_vbar(data: dict, title: str):
@@ -26,6 +23,8 @@ def plot_vbar(data: dict, title: str):
     p = figure(
         x_range=FactorRange(*x),
         title=title,
+        width=550,
+        height=420,
     )
     p.vbar(
         x="x",
@@ -34,12 +33,18 @@ def plot_vbar(data: dict, title: str):
         source=ColumnDataSource(data=dict(x=x, y=y)),
         fill_color=factor_cmap(
             "x",
-            palette=Category20_20,
-            factors=["A", "B", "C", "I"],
+            palette=["#aec7e8", "#1f77b4", "#ff7f0e", "#ffbb78"],
+            factors=["A", "I", "C", "B"],
             start=1,
             end=2,
         ),
     )
+
+    tooltips = [
+        ("(x, y)", "(@x, @y)"),
+    ]
+    # Add HoverTool to the figure
+    hover = HoverTool(tooltips=tooltips)
 
     p.y_range.start = 0
     p.x_range.range_padding = 0.1
