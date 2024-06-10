@@ -1,0 +1,26 @@
+/*-- scss:defaults --*/
+
+.title {
+  font-size: 90px !important;
+  color: rgb(33, 80, 120) !important;
+}
+
+.subtitle {
+  color: rgb(33, 80, 120, 0.5) !important;
+}
+.quarto-title-author-name {
+  font-size: 30px;
+}
+
+.date {
+  font-size: 20px;
+}
+
+.vm-center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+/*-- scss:rules --*/

@@ -1,0 +1,423 @@
+---
+title: "NYC Landlord Compliance Sentinel"
+subtitle: "Can We Identify Potential HMC Violators in New York City leveraging Open Data?"
+author: "Gabriel Stefanini Vicente (**g4brielvs**)"
+date: June 10, 2024
+
+highlight-style: pygments
+bibliography: ../docs/bibliography.bib
+format:
+  revealjs:
+    chalkboard: 
+      buttons: false
+    slide-number: c/t
+    preview-links: auto
+    theme: [simple, custom.scss]
+    footer: "NYC Landlord Compliance Sentinel"
+    transition: slide
+---
+
+```{python}
+import dask.dataframe as dd
+import geopandas as gpd
+import h3
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import dask_geopandas
+
+from bokeh.io import output_notebook
+from itables import init_notebook_mode, show
+from shapely.geometry import Polygon
+
+from bokeh.palettes import Category20_4
+from landlords.plotting import plot_vbar
+
+pd.set_option('display.float_format', lambda x: '%.3f' % x)
+```
+
+## NYC Housing Maintenance Code {.smaller transition="zoom"}
+
+> [The New York City Housing Maintenance Code (HMC)](https://www.nyc.gov/assets/buildings/pdf/HousingMaintenanceCode.pdf) protects tenants’ rights, promotes public health, and ensures that all New Yorkers live in well-maintained homes.
+
+<br><br>
+
+::: {layout-ncol=2}
+![](https://www.nyc.gov/assets/buildings/images/content/pages/buildings-logo.jpg){fig-align="center" width="65%"}
+
+![](https://www.nyc.gov/assets/buildings/images/content/misc/HMC.jpg){fig-align="center"}
+:::
+
+::: {.notes}
+- Where there are laws, there are violators (Laws inevitably attract those who will break them)
+:::
+
+## Problem Statement {.smaller}
+
+::: {layout-ncol=2}
+![](https://ag.ny.gov/themes/composer/oag/images/logo.svg){width="75%"}
+
+The [NYAG](https://ag.ny.gov) actively works to combat harmful landlord practices impacting tenants. To pursue these cases, the NYAG needs to determine the actual owner of the building, rather than the LLC listed as the owner. 
+<br><br>
+However, landlords frequently obscure their identities by acquiring individual buildings through separate corporations and LLCs. 
+:::
+
+##  Data {.smaller transition="slide"}
+
+::: {layout-ncol=2}
+![](https://opendata.cityofnewyork.us/wp-content/themes/opendata-wp/assets/img/nyc-open-data-logo.svg){width="100%"}
+<br>
+@nyc_open_data provides transparent access to diverse datasets for public use and analysis.
+
+::: {.incremental}
+- [📊 | Multiple Dwelling Registrations](https://data.cityofnewyork.us/Housing-Development/Multiple-Dwelling-Registrations/tesw-yqqr/about_data)
+  
+  Registrations are required upon taking ownership of a qualifying building, and once a year thereafter.
+- [📊 | Registration Contacts](https://data.cityofnewyork.us/Housing-Development/Registration-Contacts/feu5-w2e2/about_data)
+  
+  Contains information about organizations or individuals listed on a Multiple Dwelling Registration.
+- [📊 | Housing Maintenance Code Violations](https://nycopendata.socrata.com/Housing-Development/Housing-Maintenance-Code-Violations/wvxf-dwi5/about_data)
+  
+  Violations against conditions, in rental dwelling buildings, that have been verified to violate the @NYCHMC.
+:::
+:::
+
+::: aside
+Retrieved on May 29, 2024.
+:::
+
+## Data (cont.) {.smaller transition="slide"}
+
+:::: columns
+::: {.column width="50%"}
+### NYC Pluto
+**NYC PLUTO** (Primary Land Use Tax Lot Output) is a comprehensive data set provided by the [New York City Department of City Planning](https://www.nyc.gov/site/planning/index.page). It includes extensive information about tax lots throughout the five boroughs of New York City. 
+
+@nycpluto data encompasses a wide range of details such as land use, zoning, lot size, building square footage, year built, and the number of residential units, among other attributes. 
+:::
+
+::: {.column width="50%"}
+```{=html}
+<iframe width="500" height="500" src="https://s-media.nyc.gov/agencies/dcp/assets/files/pdf/data-tools/bytes/pluto_readme.pdf" title="NYC PLUTO"></iframe>
+```
+:::
+::::
+
+::: {.notes}
+:::
+
+## Exploratory Data Analysis (EDA)
+
+::: {.incremental}
+- What are the key characteristics of the dataset?
+  - What variables are included? What is the data type of each variable (e.g., categorical, numerical, datetime)?
+  - Are there any associations or correlations?
+
+- Are there any transformations or feature engineering needed?
+
+- What visualizations can help understand the data better? How can visualizations help in identifying patterns, trends, and outliers?
+:::
+
+::: {.notes}
+> Exploratory Data Analysis (EDA) is the process of analyzing datasets to summarize their main characteristics using statistical and visual methods.
+
+- Are there any new features that can be created from existing variables?
+:::
+
+## Exploring `Violations`  {.smaller .scrollable} 
+
+> Violations against conditions, in rental dwelling units and buildings, that have been verified to violate the New York City Housing Maintenance Code (HMC)
+
+Cardinality: 
+```{python}
+VIOLATIONS = dd.read_parquet("../data/interim/VIOLATIONS").compute()
+len(VIOLATIONS)
+```
+
+```{python}
+from itables import init_notebook_mode, show
+init_notebook_mode(all_interactive=True)
+
+show(VIOLATIONS.head(1).T, scrollY="500px", scrollCollapse=True, paging=False)
+output_notebook()
+```
+
+
+## Exploring `Violations` (cont.) {.smaller} 
+
+:::: columns
+::: {.column width="60%"}
+```{python}
+plot_vbar(
+    VIOLATIONS.groupby(["Borough", "ViolationStatus"])["ViolationID"]
+    .nunique()
+    .to_dict(),
+    title="Housing Maintenance Code Violations by Borough and ViolationStatus",
+)
+```
+:::
+::: {.column width="40%"}
+```{python}
+VIOLATIONS["ViolationStatus"].value_counts()
+```
+:::
+::::
+
+## Exploring **Open** `Violations` {.smaller} 
+
+```{python}
+VIOLATIONS[(VIOLATIONS["ViolationStatus"] == "Open")]["CurrentStatus"].value_counts().to_frame().plot(kind="barh", color="orange")
+```
+
+## Exploring `Violations` (`Class`) {.smaller} 
+
+:::: columns
+::: {.column width="60%"}
+```{python}
+#| fig-align: center
+plot_vbar(
+    VIOLATIONS.groupby(["Borough", "Class"])["ViolationID"].nunique().to_dict(),
+    title="Housing Maintenance Code Violations by Borough and Class",
+)
+```
+:::
+::: {.column width="40%"}
+```{python}
+VIOLATIONS[(VIOLATIONS["ViolationStatus"] == "Open")]["Class"].value_counts().to_frame().plot(kind="pie", colors=["#ffbb78", "#aec7e8", "#ff7f0e", "#1f77b4"], subplots=True);
+```
+:::
+::::
+
+::: aside
+Violations are issued in four classes: Class A (non-hazardous), Class B (hazardous), Class C (immediately hazardous) and Class I (information orders)
+:::
+
+## Plotting `Violations` of Class **B** and **C**
+
+```{python}
+data = (
+    VIOLATIONS[
+        (VIOLATIONS["ViolationStatus"] == "Open")
+        & (VIOLATIONS["hex_id"] != "0")
+        & (VIOLATIONS["Class"].isin(["B", "C"]))
+    ]
+    .groupby(["hex_id"])["ViolationID"]
+    .count()
+    .to_frame("count")
+)
+
+VIOLATIONS_DENSITY = gpd.GeoDataFrame(
+    data=data,
+    geometry=[Polygon(h3.h3_to_geo_boundary(idx, True)) for idx in data.index],
+    crs="EPSG:4326",
+)
+
+VIOLATIONS_DENSITY.explore(column="count", cmap="Reds", tiles="CartoDB positron")
+```
+
+::: aside
+HMC Violations which are **Open** and of *Class* **B** or **C** (hazardous).
+:::
+
+## Enriching with **NYC PLUTO**
+
+BBL: **4033340299**
+
+```{python}
+PLUTO = pd.read_csv(
+    "../data/external/nyc_pluto_24v1_1_csv/pluto_24v1_1.csv",
+)
+show(PLUTO[PLUTO["bbl"] == 4033340299].T, scrollY="320px", scrollCollapse=True, paging=False)
+
+```
+
+## Exploring `Violations` and `BBL` {.smaller}
+
+```{python}
+#| fig-align: center
+VIOLATIONS_BY_BBL = (
+    VIOLATIONS.query('Class == "B" or Class == "C"')
+    .groupby(["BBL", "RegistrationID", "BuildingID"])["ViolationID"]
+    .nunique()
+    .to_frame("violation_count")
+    .reset_index()
+    .sort_values(["violation_count"])
+)
+
+VIOLATIONS_BY_BBL = pd.merge(
+    VIOLATIONS_BY_BBL,
+    PLUTO,
+    left_on=["BBL"],
+    right_on=["bbl"],
+    how="inner",
+).sort_values("violation_count", ascending=False)
+
+corr = VIOLATIONS_BY_BBL[
+    [
+        "violation_count",
+        "easements",
+        "lotarea",
+        "bldgarea",
+        "comarea",
+        "resarea",
+        "officearea",
+        "retailarea",
+        #"garagearea",
+        #"strgearea",
+        #"factryarea",
+        "assessland",
+        "yearbuilt",
+    ]
+].corr(numeric_only=True)
+
+# Plot the heatmap
+plt.figure(figsize=(8, 6))
+sns.heatmap(corr, annot=True, cmap="coolwarm", linewidths=0.1, linecolor="black")
+plt.title("Correlation Matrix")
+plt.show()
+```
+
+## Exploring `Registrations` {.smaller}
+
+```{python}
+REGISTRATIONS = pd.read_csv(
+    "../data/external/Multiple_Dwelling_Registrations_20240529.csv",
+    low_memory=False,
+)
+show(REGISTRATIONS.head(1).T, scrollY="320px", scrollCollapse=True, paging=False)
+```
+
+## `Registrations` and `Violations` {.smaller}
+
+Do boroughs show disparities in registrations and violations?
+
+```{python}
+#| fig-align: center
+df = pd.merge(REGISTRATIONS["Boro"].value_counts().to_frame(), VIOLATIONS.query('Class == "B" or Class == "C"')["Borough"].value_counts().to_frame(), left_index=True, right_index=True)
+
+df["count_x"] = 100*df["count_x"]/df["count_x"].sum()
+df["count_y"] = -100*df["count_y"]/df["count_y"].sum()
+
+df.plot(title="Multiple Dwelling Registrations and Violations (B or C) by Borough", kind="bar", legend=False)
+plt.ylabel('% Proportion by Borough');
+```
+
+## Approach & Methodology {.smaller .scrollable}
+
+> Can **Potential HMC Landlord Violators** be Identified based on the Highest Number of Violations?
+
+### Principles
+::: {.incremental}
+- Clarity and Transparency
+  - Ease of Communication & Stakeholder Communication
+  - Interpretability
+- Faster Implementation and Iteration
+  - Speed and Efficiency
+  - Ease of Implementation
+- Ethical and Practical Considerations
+:::
+
+::: {.notes}
+- Ethical Transparency: In fields like housing and law enforcement, ethical considerations are paramount. Simple methodologies ensure that the decision-making process is transparent and can be scrutinized for fairness and bias.
+- Practical Application: Simpler models are more practical for day-to-day use by the NYOAG team. They can be easily updated and maintained, ensuring long-term sustainability and usefulness.
+:::
+
+## Potential Landlord Violators {.smaller .scrollable}
+
+```{python}
+show(
+    VIOLATIONS_BY_BBL[["RegistrationID", "BuildingID", "violation_count", "ownername"]], scrollY="400px", scrollCollapse=True, paging=False
+)
+```
+
+## Potential Landlord Violators {.smaller .scrollable}
+
+```{python}
+REGISTRATIONS_CONTACTS = pd.read_csv(
+    "../data/external/Registration_Contacts_20240529.csv"
+)
+```
+```{python}
+POTENTIAL_CANDIDATES = pd.merge(
+    REGISTRATIONS_CONTACTS,
+    VIOLATIONS_BY_BBL.sort_values("violation_count", ascending=False).head(10),
+    on=["RegistrationID"],
+    how="right",
+)
+
+POTENTIAL_CANDIDATES["Name"] = (
+    POTENTIAL_CANDIDATES["FirstName"] + " " + POTENTIAL_CANDIDATES["LastName"]
+)
+POTENTIAL_CANDIDATES["BBL"] = POTENTIAL_CANDIDATES["BBL"].astype(str)
+
+show(POTENTIAL_CANDIDATES.groupby(["Name", "violation_count", "RegistrationID", "BuildingID", "BBL"])[
+    "violation_count"
+].first().to_frame())
+``` 
+
+## Mapping Buildings with Top Violations
+
+```{python}
+PLUTO = dask_geopandas.read_file(
+    "../data/external/nyc_mappluto_24v1_1_fgdb/MapPLUTO24v1_1.gdb", npartitions=8
+);
+
+PLUTO[PLUTO["BBL"].isin(VIOLATIONS_BY_BBL.head(10)["BBL"])].compute().explore(
+    color="red", tiles="CartoDB positron"
+)
+```
+
+## Results and Findings 
+
+### Key Findings
+
+- **Identification of Top 10 Potential Landlord Violators:** We identified the top 10 landlords with the highest total number of reported (closed and open) hazardous violations.
+
+## Results and Findings (cont.)
+
+### Key Findings
+
+- **Disproportionate Reporting in Brooklyn and the Bronx:** Violations are disproportionately reported in Brooklyn and the Bronx compared to other boroughs.
+
+- **Building Characteristics:** There appears to be no significant effect of building characteristics, such as `assessland`, on the likelihood of violations occurring.
+
+## Future Work {.smaller transition="fade"}
+
+- **Additional Data Sources**
+  - Incorporate additional relevant data sources such as financial records, property ownership history, and demographic information to enrich the analysis.
+
+- **Scalability and Automation**
+  - Explore opportunities to automate data collection, preprocessing, deployment processes, facilitating more efficient and timely responses to emerging landlord practices.
+
+## Future Work (cont.) {.smaller transition="fade"}
+
+- **Exploration of Advanced Machine Learning Techniques**
+  - Investigate the applicability of machine learning architectures for more complex pattern recognition in landlord behavior data.
+  - Implement unsupervised learning techniques such as clustering to identify latent groups of landlords with similar behavior patterns.
+  - Utilize anomaly detection methods to automatically flag unusual landlord activities that may indicate potential violations.
+  - Apply time series forecasting models to predict trends in landlord behavior over time, potentially aiding in proactive enforcement actions by NYOAG.
+
+- **Ethical Considerations and Fairness**
+  - Conduct rigorous assessments of model fairness and bias to ensure equitable treatment across diverse demographic groups and geographic regions.
+
+::: {.notes}
+Investigate the applicability of machine learning architectures for more complex pattern recognition in landlord behavior data.
+:::
+
+## Conclusion {.smaller transition="fade"}
+
+### Summary 
+
+- Identification of Top 10 Potential Landlord Violators
+- Identification of `452,295` of **SECTION27-2107**. 
+- Comprehensive Analysis (data colletion, data processing, exploratory analysis, feeture engineering, report preparation) within **4 hours**. 
+- Identification of future tasks and rapid iteration
+
+### Q&A
+
+![](https://images.squarespace-cdn.com/content/v1/58c9706f9f7456a4a142c10c/1507640491535-KC3SE9O3HI8TG5Q4XJ8K/image-questions.jpg?format=2500w)
+
+## References
+
+::: {#refs}
+:::
